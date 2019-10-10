@@ -11,12 +11,15 @@ public class LIMSwitch : MonoBehaviour
     [Range(0,3)]
     public float moveDuration = 3f;  
 
-    const float totalHandleMoveLength = 100f;    //좌 우 최대 이동 할 수 있는 거리
+    const float totalHandleMoveLength = 72;    //좌 우 최대 이동 할 수 있는 거리
     const float halfMoveLength = totalHandleMoveLength / 2;  //최대 이동거리의 절반 ?
 
     Image handleImage;                  // 핸들 이미지
     Image backgroundImage;              // 배경 이미지
     RectTransform handleRectTransform;  //스위치 핸들의 RectTransform
+
+    //코루틴 함수
+    Coroutine moveHandleCoroutine;      // 핸들 이동 코루틴
     
     // Start is called before the first frame update
     void Start()
@@ -47,7 +50,12 @@ public class LIMSwitch : MonoBehaviour
         float ratio = Mathf.Abs(dis.x) / totalHandleMoveLength;
         float duration = moveDuration * ratio;
 
-        StartCoroutine(MoveHandle(fromPos,toPos,duration));
+        if (moveHandleCoroutine != null)
+        {
+            StopCoroutine(moveHandleCoroutine);
+            moveHandleCoroutine = null;
+        }
+        moveHandleCoroutine = StartCoroutine(MoveHandle(fromPos,toPos,duration));
     }
     /// <summary>
     /// 핸들을 이동하기 위한 함수 
@@ -59,8 +67,8 @@ public class LIMSwitch : MonoBehaviour
     IEnumerator MoveHandle(Vector2 fromPos, Vector2 toPos, float duartion)
     {
         float currTime = 0f;
-        while( currTime < duartion)
-        {
+        while (currTime < duartion)
+        { 
             float t = currTime / duartion;
             Vector2 newPos = Vector2.Lerp(fromPos, toPos, t);
             handleRectTransform.anchoredPosition = newPos;
