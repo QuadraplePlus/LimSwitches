@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOn: 0
-  moveDuration: 0.5
+  moveDuration: 0.15
   handleColor: {r: 1, g: 1, b: 1, a: 1}
   onSwitchColor: {r: 0.34100214, g: 0.9150943, b: 0.34100214, a: 1}
   offSwitchColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
