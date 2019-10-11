@@ -1,4 +1,4 @@
-[한국어]()  /  [English]()
+[한국어](https://github.com/dlawotjd1020/LimSwitches/blob/master/README.md)  /  [English](https://github.com/dlawotjd1020/LimSwitches/blob/master/README.en.md)
 
 LimSwitches
 ===========
