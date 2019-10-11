@@ -1,3 +1,5 @@
+[한국어]()  /  [English]()
+
 LimSwitches
 ===========
 C# Switch using uGUI for Unity
