@@ -1,6 +1,3 @@
-[한국어](https://github.com/dlawotjd1020/LimSwitches/blob/master/README.md)  /  [English](https://github.com/dlawotjd1020/LimSwitches/blob/master/README.en.md)
-
-
 LimSwitches
 ===========
 C# Switch using uGUI for Unity
@@ -18,7 +15,7 @@ Anyone can use it in any field without restriction.
 
 
 # Start
-[Links to Usage] (https://blog).Check out naver.com/lonely_2/221674536233)
+Check [Links to Usage!](https://blog.naver.com/lonely_2/221674536233)
 
 # Suggestions and Comments
 If you have any questions, you can send me an e-mail!
