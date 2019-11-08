@@ -19,7 +19,7 @@ Anyone can use it in any field without restriction.
 ## Start
 Check [Links to Usage!](https://blog.naver.com/lonely_2/221674536233)
 
-## precautions
+## recautions
 
 We do not provide any other images other than sample images here. 
 If you want a different shape switch, please prepare a separate image.
