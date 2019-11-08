@@ -10,7 +10,7 @@ Anyone can use it in any field without restriction.
 
 
 ## Functions
-1. You can set the maximum x-axis travel distance of the switch handle.
+1. Switch automatically moves to match the length of the switch background.
 2. You can change the background of the switch and the color of the switch handle.
 3. The changed color can be selected when the switch is on/off.
 4. Depending on the status of the switch, the setting elements such as BGM and sound effects can be easily switched on and off.
