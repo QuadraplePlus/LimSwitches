@@ -9,16 +9,21 @@ This source file is manufactured from C# and is easier to use with Unity than wi
 Anyone can use it in any field without restriction.
 
 
-# Functions
+## Functions
 1. You can set the maximum x-axis travel distance of the switch handle.
 2. You can change the background of the switch and the color of the switch handle.
 3. The changed color can be selected when the switch is on/off.
-4. Demonstration images can be found here at [here!]().
+4. Depending on the status of the switch, the setting elements such as BGM and sound effects can be easily switched on and off.
 
 
-# Start
+## Start
 Check [Links to Usage!](https://blog.naver.com/lonely_2/221674536233)
 
-# Suggestions and Comments
+## precautions
+
+We do not provide any other images other than sample images here. 
+If you want a different shape switch, please prepare a separate image.
+
+## Suggestions and Comments
 If you have any questions, you can send me an e-mail!
 dlawotjd1020@gmail.com
