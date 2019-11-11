@@ -2,61 +2,70 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class LIMSwitch : MonoBehaviour
 {
-    //스위치 온 오프 여부 확인용
-    public bool isOn;
-    // 0 ~ 3 속도 조절을 할 수 있는 스크롤 생성, 스위치의 이동시간 (최대 3)
+    // Scroll generation with 0 to 3 speed adjustment, travel time of switch (maximum 3)
+    //Optimal value: 0.1 ~ 0.7
     [Range(0,3)]
     public float moveDuration = 3f;
     //컬러 기본값
-    public Color handleColor = Color.white;
-    public Color onSwitchColor = Color.green;
-    public Color offSwitchColor = Color.gray; 
+    public Color handleColor;             //Switch handle color
+    public Color onBackgroundColor;       //Color value when 'On'
+    public Color offBackgroundColor;       //Color value when 'Off'
 
-    const float totalHandleMoveLength = 72;    //좌 우 최대 이동 할 수 있는 거리
-    const float halfMoveLength = totalHandleMoveLength / 2;  //최대 이동거리의 절반 ?
+    private float totalHandleMoveLength;    //Maximum length x - axis of the background.
+    private float halfMoveLength;           //The distance the handle will move
+    private float handleRadius;             //Radius of handle
 
-    Image handleImage;                  // 핸들 이미지
-    Image backgroundImage;              // 배경 이미지
-    RectTransform handleRectTransform;  //스위치 핸들의 RectTransform
+    private float backGrundRadius;          //Radius of the background
+    private float radiusValue;              //The difference between the arc of the steering wheel and the arc of the background.
+    const String handleName = "Handle";
+
+    Image handleImage;                      // Handle Image
+    Image backgroundImage;                  // Background image
+    RectTransform handleRectTransform;      //RectTransform of Switch Handle
 
     //코루틴 함수
-    Coroutine moveHandleCoroutine;      // 핸들 이동 코루틴
-    Coroutine backgroundColorChangeCoroutine; //배경색 변경 코루틴
-    
-    // Start is called before the first frame update
-    void Start()
+    Coroutine moveHandleCoroutine;               // Handle moving corutine
+    Coroutine backgroundColorChangeCoroutine;    // Background color change corutine
+    public static Action<bool> onSwitchAction;   // Signal to be passed according to switch on/off
+    bool isOn;                                   // To check the operation of the switch
+    void Start()    
     {
-        // Handle 오브젝트 초기화 
-        GameObject handleObfect = transform.Find("Handle").gameObject;
-        handleRectTransform = handleObfect.GetComponent<RectTransform>();
-        //핸들 이미지
-        handleImage = GetComponent<Image>();
+        //Calling up components of field declared variables  
+        GameObject handleObject = transform.Find(handleName).gameObject;
+        handleRectTransform = handleObject.GetComponent<RectTransform>();
+        handleRadius = handleObject.GetComponent<RectTransform>().sizeDelta.x;
+        totalHandleMoveLength = GetComponent<RectTransform>().sizeDelta.x;
+        backGrundRadius = GetComponent<RectTransform>().sizeDelta.y;
+
+        radiusValue = (backGrundRadius - handleRadius);
+        halfMoveLength = ((totalHandleMoveLength - handleRadius) - radiusValue) / 2;
+
+        handleImage = handleObject.GetComponent<Image>();
         handleImage.color = handleColor;
 
-        //배경 이미지
         backgroundImage = GetComponent<Image>();
-        backgroundImage.color = offSwitchColor;
+        backgroundImage.color = onBackgroundColor;
 
         if (isOn)
         {
-            handleRectTransform.anchoredPosition = new Vector2(halfMoveLength ,0);
+            handleRectTransform.anchoredPosition = new Vector2(-halfMoveLength ,0);
         }
         else
         {
-            handleRectTransform.anchoredPosition = new Vector2(-halfMoveLength, 0);
+            handleRectTransform.anchoredPosition = new Vector2(halfMoveLength, 0);
         }
     }
-
     public void OnClickSwitch()
     {
-        //서로 반대의 동작을 하도록 만듦
+        //Toggle every click , The two perform different actions.
         isOn = !isOn;
 
         Vector2 fromPos = handleRectTransform.anchoredPosition;
-        Vector2 toPos = (isOn) ? new Vector2(halfMoveLength, 0) : new Vector2(-halfMoveLength, 0);
+        Vector2 toPos = (isOn) ? new Vector2(-halfMoveLength, 0) : new Vector2(halfMoveLength, 0);
         Vector2 dis = toPos - fromPos;
 
         float ratio = Mathf.Abs(dis.x) / totalHandleMoveLength;
@@ -73,29 +82,39 @@ public class LIMSwitch : MonoBehaviour
 
         //backgruondChangeColorCouroutine
         Color fromColor = backgroundImage.color;
-        Color toColor = (isOn) ? onSwitchColor : offSwitchColor;
+        Color toColor = (isOn) ? offBackgroundColor : onBackgroundColor;
         if (backgroundColorChangeCoroutine != null)
         {
             StopCoroutine(backgroundColorChangeCoroutine);
             backgroundColorChangeCoroutine = null;
         }
         backgroundColorChangeCoroutine = 
-            StartCoroutine(changeBackgroundColor(fromColor,toColor,duration));
+            StartCoroutine(ChangeBackgroundColor(fromColor,toColor,duration));
+
+        if (isOn)                   //Important!!!
+        {                           //Execute an action function where you can invoke a function from another script.
+            onSwitchAction(isOn);   //'if' the switch is 'on' and 'else' switch is 'off'.
+        }                           //Check 'ExampleOutputText.cs'
+        else
+        {
+            onSwitchAction(isOn);
+        }
     }
     /// <summary>
-    /// 핸들을 이동하기 위한 함수 
+    /// Function for moving the handle
     /// </summary>
-    /// <param name="fromPos">핸들의 시작위치</param>
-    /// <param name="toPos">핸들의 목적위치</param>
-    /// <param name="duartion">핸들이 이동할 시간</param>
-    /// <returns>없음</returns>
+    /// <param name="fromPos">Starting position of handle</param>
+    /// <param name="toPos">The destination of the handle</param>
+    /// <param name="duartion">Time for the handle to move</param>
+    /// <returns>none</returns>
     IEnumerator MoveHandle(Vector2 fromPos, Vector2 toPos, float duartion)
     {
         float currTime = 0f;
         while (currTime < duartion)
-        { 
+        {
             float t = currTime / duartion;
-            Vector2 newPos = Vector2.Lerp(fromPos, toPos, t);
+            float delayT = t / 3;
+            Vector2 newPos = Vector2.Lerp(fromPos, toPos, t + delayT);
             handleRectTransform.anchoredPosition = newPos;
 
             currTime += Time.deltaTime;
@@ -103,19 +122,20 @@ public class LIMSwitch : MonoBehaviour
         }
     }
     /// <summary>
-    /// 스위치 배경색 변경 하는 코루틴 함수
+    /// Function to change switch background color
     /// </summary>
-    /// <param name="fromColor">처음 시작 색상</param>
-    /// <param name="toColor">변경될 색상</param>
-    /// <param name="duration">변경되는 시간</param>
-    /// <returns>없음</returns>
-    IEnumerator changeBackgroundColor(Color fromColor, Color toColor, float duration)
-    {
+    /// <param name="fromColor">First Start Color</param>
+    /// <param name="toColor">Color to change</param>
+    /// <param name="duration">Changing time</param>
+    /// <returns>none</returns>
+    IEnumerator ChangeBackgroundColor(Color fromColor, Color toColor, float duration)
+    {      
         float currTime = 0f;
         while (currTime < duration)
-        {
+        {    
             float t = currTime / duration;
-            Color newColor = Color.Lerp(fromColor, toColor, t);
+            float delayT = t / 3;
+            Color newColor = Color.Lerp(fromColor, toColor, t + delayT);
             backgroundImage.color = newColor;
 
             currTime += Time.deltaTime;
