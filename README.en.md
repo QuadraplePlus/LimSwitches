@@ -10,12 +10,14 @@ Anyone can use it in any field without restriction.
 
 
 # Functions
-1. You can set the maximum x-axis travel distance of the switch handle.
-2. You can change the background of the switch and the color of the switch handle.
-3. The changed color can be selected when the switch is on/off.
-4. Demonstration images can be found here at [here!]().
-
-
+1. Switch automatically moves to match the length of the switch background.
+![Alt text](./photos/AC_[20191111-175839].gif)
+2. You can change the handle color of the switch and the color of the switch background.
+![Alt text](./photos/AC_[20191111-181149].gif)
+3. You can specify the handle movement speed of the switch (equivalent to color change time).
+![Alt text](./photos/AC_[20191111-181851].gif)
+4. Objects can be controlled depending on the status of the switch.
+![Alt text](./photos/AC_[20191111-181619].gif)
 # Start
 Check [Links to Usage!](https://blog.naver.com/lonely_2/221674536233)
 
