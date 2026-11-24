@@ -29,4 +29,3 @@ C# Switch using uGUI for Unity
 
 ## 건의 및 의견
 기타 건의, 질문이 있으시다면, 메일을 보내주세요.
-dlawotjd1020@gmail.com
